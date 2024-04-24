@@ -106,7 +106,7 @@ In the "Summary" window, you will see the run steps.
 Now connect the USB and JTAG on the ZCU102 board to your machine, as shown below:
 
 <p align="center">
-    <img src="./figures/board.png" width=50% height=50%>
+    <img src="./figures/board.jpg" width=50% height=50%>
 </p> 
 <p align="center">Figure 13: ZCU102 Connections <p align="center">
 
