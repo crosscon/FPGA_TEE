@@ -10,35 +10,59 @@ The configuration controller in the shell receives the required information from
 PCAP port can be used to program the FPGA from the processing system, i.e., Arm cores, however it can be used by any application to do so. To prevent unauthorized access to FPGA logic, the PCAP is deactivated (PCAP and ICAP work exclusively). The controlling application is responsible for deactivating PCAP and enabling ICAP and configuring the FPGA and loading partial bitstreams in memory in preparation for the partial configuration process.  This represents TA_FPGA as discueed in D4.1.
 
 ## How to run it?
-Due to known issue of ZCU102 Evaluation Board ([link](https://support.xilinx.com/s/article/71968?language=en_US)), we are running the demo in the debug mode. Due to this limitation, we were only able to test basic functionality with the FPGA. That is, we used a user interface to interact with the controlling application rather than implementing another application that communicates with controlling application to request FPGA services. To recreate the Vitis workspace, follow these simple steps:
+Due to known issue of ([ZCU102](https://support.xilinx.com/s/article/71968?language=en_US)) Evaluation Board, we are running the demo in the debug mode. Due to this limitation, we were only able to test basic functionality with the FPGA. That is, we used a user interface to interact with the controlling application rather than implementing another application that communicates with controlling application to request FPGA services. To recreate the Vitis workspace, follow these simple steps:
 
- 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1. ![Vitis](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step1.png)
+ 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1.
+
+<p align="center">
+    <img src="./figures/step1.png" width=70% height=70%>
+</p> 
+<p align="center">Figure 1: Xilinx Vitis <p align="center">
  
- 2. Choose "Create Application Project" and click next 3. ![New Application Project](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step2.png)
+ 2. Choose "Create Application Project" and click next.
+
+<p align="center">
+    <img src="./figures/step2.png" width=70% height=70%>
+</p> 
+<p align="center">Figure 2: Xilinx Vitis: Create New Application Project <p align="center">
  
  3. In tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)). This file contains the description of the entire platform including the hardware design representing the shell.  ![Loading Platform Description](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step3.png)
 
 Once loaded, keep the default settings and click next. In the field "Application project name" provide a name to the application. Make sure the application is associated with processor psu_cortexa53_0 and click next. Keep default settings and click next.
 
-4. From "Templates" choose an empty application (c) and click finish. ![Setting up a new Application from Template](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step4.png)
+4. From "Templates" choose an empty application (c) and click finish.
+
+![Setting up a new Application from Template](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step4.png)
 
 5. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right click on src folder. Choose from the menu import resources ... 
-In field "From directory", provide the path to ([sdk/sources/](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources)), the source files will apear in the window, select them and click finish. This application deactivates the PCAP and gives control to the application running on the FPGA shell![Adding Source Code to the Application](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step5.png)
+In field "From directory", provide the path to ([sdk/sources/](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources)), the source files will apear in the window, select them and click finish. This application deactivates the PCAP and gives control to the application running on the FPGA shell
 
-6. Right click on the application_name [standalone_psu_cortexta53_0] and choose Build Project. ![enter image description here](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step6.png)
+![Adding Source Code to the Application](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step5.png)
 
- 7. In the main toolbar, select the small drop-menu next to the run symbol and  slect "Run Configurations.." Select "Single Application Debug" and cerate new one.![Creating Run Configurations](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step7.png)
+6. Right click on the application_name [standalone_psu_cortexta53_0] and choose Build Project.
 
-8. Keep the default values in the Main tab and move to the next tab. ![Main tab - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step8.png)
+![enter image description here](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step6.png)
+
+7. In the main toolbar, select the small drop-menu next to the run symbol and  slect "Run Configurations.." Select "Single Application Debug" and cerate new one.
+
+![Creating Run Configurations](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step7.png)
+
+8. Keep the default values in the Main tab and move to the next tab.
+
+![Main tab - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step8.png)
 
 9. In the Application tab, make sure application_name appears in the Project field. If not, browse for the generated elf file.
+
 ![Application tab - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step9.png)
  
-10. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](https://github.com/crosscon/FPGA_TEE/tree/main/Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure. ![Uploading Partial Bitstreams - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step10.png)
+10. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](https://github.com/crosscon/FPGA_TEE/tree/main/Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure.
+
+![Uploading Partial Bitstreams - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step10.png)
 This step will upload the partial bitstreams in memory allocated for our shell.
 
 11. In the "Target Setup" tab, fill the "Hardware Platform" and "Bitstream File" with the files provided in  ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)) and ([Bitstreams/top.bit](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.bit))
 In the "Summary" window, you will see the run steps.
+
 ![Target Setup - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step11.png) 
 
 Now connect the USB and JTAG on the ZCU102 board to your machine, as shown below:
