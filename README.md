@@ -143,7 +143,7 @@ Activate vFPGA_2 by typing 2 in.
  Now, vFPGA_2 can be reconfigured.
 
 <p align="center">
-    <img src="./figures/board.png" width=50% height=50%>
+    <img src="./figures/demo5.png" width=50% height=50%>
 </p> 
 <p align="center">Figure 18: Exiting Demo <p align="center">
 
