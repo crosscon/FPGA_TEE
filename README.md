@@ -12,19 +12,69 @@ PCAP port can be used to program the FPGA from the processing system, i.e., Arm 
 ## How to run it?
 Due to known issue of ZCU102 Evaluation Board ([link](https://support.xilinx.com/s/article/71968?language=en_US)), we are running the demo in the debug mode. Due to this limitation, we were only able to test basic functionality with the FPGA. That is, we used a user interface to interact with the controlling application rather than implementing another application that communicates with controlling application to request FPGA services. To recreate the Vitis workspace, follow these simple steps:
 
- 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1.
- 2. Choose "Create Application Project" and click next.
- 3. In tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file (sdk/sources/top.xsa). This file contains the description of the entire platform including the hardware design representing the shell.  Once loaded, keep the default settings and click next.
- 4. In the field "Application project name" provide a name to the application and make sure the application is associated with processor psu_cortexa53_0. Click next.
- 5. Keep default settings and click next.
- 6. From Templates choose an empty application (c) and click finish.
- 7. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right click on src. Choose from the menu import resources ...
- 8. In field "From directory", provide the path to (sdk/sources/icap_active), the c file will apear in the window, select it and click finish.
- 9. Right click on the application_name [standalone_psu_cortexta53_0] and choose Build Project.
+ 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1. ![Vitis](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step1.png)
  
-To build a boot image, use the information provided in (sdk/output.bif), see (figures/demo1) and a binary file is created based on the information provided in the bif file. This image (sdk/BOOT.bin) is used to program the flash memory as shown in (figures/demo2). This image contains the partial bitstreams that will be used to configure the vFPGAs. The board is connected as shown in figures/demo0, USB and JTAG are connected to the controlling laptop that runs Xilinx Vitis application and SW6 is set to JTAG mode (all four switches are on). Then we open a serial terminal (based on the COM port) with baud rate of 115200. 
-Once the flash is programmed successfully, we run the application icap_active in Xilinx Vitis (figures/demo3). 
+ 2. Choose "Create Application Project" and click next 3. ![New Application Project](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step2.png)
+ 
+ 3. In tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)). This file contains the description of the entire platform including the hardware design representing the shell.  ![Loading Platform Description](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step3.png)
 
-The icap_active application deactivates the PCAP and gives control to the application running on the FPGA shell (included in the provided top.xsa file. Once the FPGA is configured, we can see the Menu on the terminal (see figures/demo4). Typing 7 (figures/demo5), we can see the status of the vFPGAs. Mode active means that vFPGA_1 is ready to be reconfigured. State full means the vFPGA is running an accelerator circuit, RM_ID refers to the reconfigurable module ID, i.e., which accelerator. Typing 6 in the terminal (figures/demo6), we shutdown the vFPGAs such that their configurations cannot be changed. If we try to load a new accelerator on a vFPGA in shutdown mode, the request is denied (figures/demo7). Therefore, we type 5 in the terminal to activate the vFPGAs (figures/demo8). Then, we can freely switch between the different accelerators on the vFPGAs (figures/demo9-demo14). 
+Once loaded, keep the default settings and click next. In the field "Application project name" provide a name to the application. Make sure the application is associated with processor psu_cortexa53_0 and click next. Keep default settings and click next.
+
+4. From "Templates" choose an empty application (c) and click finish. ![Setting up a new Application from Template](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step4.png)
+
+5. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right click on src folder. Choose from the menu import resources ... 
+In field "From directory", provide the path to ([sdk/sources/](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources)), the source files will apear in the window, select them and click finish. This application deactivates the PCAP and gives control to the application running on the FPGA shell![Adding Source Code to the Application](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step5.png)
+
+6. Right click on the application_name [standalone_psu_cortexta53_0] and choose Build Project. ![enter image description here](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step6.png)
+
+ 7. In the main toolbar, select the small drop-menu next to the run symbol and  slect "Run Configurations.." Select "Single Application Debug" and cerate new one.![Creating Run Configurations](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step7.png)
+
+8. Keep the default values in the Main tab and move to the next tab. ![Main tab - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step8.png)
+
+9. In the Application tab, make sure application_name appears in the Project field. If not, browse for the generated elf file.
+![Application tab - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step9.png)
+ 
+10. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](https://github.com/crosscon/FPGA_TEE/tree/main/Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure. ![Uploading Partial Bitstreams - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step10.png)
+This step will upload the partial bitstreams in memory allocated for our shell.
+
+11. In the "Target Setup" tab, fill the "Hardware Platform" and "Bitstream File" with the files provided in  ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)) and ([Bitstreams/top.bit](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.bit))
+In the "Summary" window, you will see the run steps.
+![Target Setup - Run Configuration](https://github.com/crosscon/FPGA_TEE/blob/main/figures/step11.png) 
+
+Now connect the USB and JTAG on the ZCU102 board to your machine, as shown below:
+![Board Setup](https://github.com/crosscon/FPGA_TEE/blob/main/figures/board.jpg)
+
+Make sure SW6 is set to JTAG mode (all four switches are on). Then, open a serial terminal, COM7 with baud rate of 115200. 
+Once switched on, run the application in Xilinx Vitis. Once the FPGA is configured, we can see the Menu on the terminal.
+![Main Menu - FPGA Shell](https://github.com/crosscon/FPGA_TEE/blob/main/figures/demo1.png)
+
+The first two options unlock the virtual FPGAs to that they can be reconfigured. In the figure above, 1 was typed in and vFPGA_1 is activated.
+![Configuring vFPGA_1 - FPGA Shell](https://github.com/crosscon/FPGA_TEE/blob/main/figures/demo2.png)
+
+In the figure above, we loaded shift left accelerator on vFPGA_1. 
+![Configuring vFPGA_2 -FPGA Shell](https://github.com/crosscon/FPGA_TEE/blob/main/figures/demo3.png)
+
+Typing 6 in the terminal shows that vFPGA_2 cannot be configured before activated.
+![Activating vFPGA_2 -FPGA Shell](https://github.com/crosscon/FPGA_TEE/blob/main/figures/demo4.png)
+ 
+ Now vFPGA_2 can be reconfigured.
+![Exiting Demo](https://github.com/crosscon/FPGA_TEE/blob/main/figures/demo5.png)
+
+We can freely lock, activate and switch between the different accelerators on the vFPGAs. 
 Our next steps is to implement a second trusted application that will communicate with the trusted application controlling the FPGA services and implement the necessary cryptographic operations to enable partial bitstreams decryption and verification.
 
+## Licence
+
+See LICENCE file.
+
+## Acknowledgments
+
+The work presented in this repository is part of the [CROSSCON project](https://crosscon.eu/) that received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No 101070537.
+
+<p align="center">
+    <img src="https://crosscon.eu/sites/crosscon/themes/crosscon/images/eu.svg" width=10% height=10%>
+</p>
+
+<p align="center">
+    <img src="https://crosscon.eu/sites/crosscon/files/public/styles/large_1080_/public/content-images/media/2023/crosscon_logo.png?itok=LUH3ejzO" width=25% height=25%>
+</p>
