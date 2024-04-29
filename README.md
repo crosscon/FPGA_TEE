@@ -72,7 +72,7 @@ In the field "From directory", provide the path to ([sdk/sources/zynq](./sdk/sou
 </p> 
 <p align="center">Figure 8: Create New Application Project for MicroBlaze Soft Core <p align="center">
 
-    8. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
+8. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
 
 <p align="center">
     <img src="./figures/step8.png" width=50% height=50%>
