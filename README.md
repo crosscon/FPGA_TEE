@@ -86,14 +86,14 @@ In the field "From directory", provide the path to ([sdk/sources/zynq](./sdk/sou
 </p> 
 <p align="center">Figure 10: Main tab - Run Configurations <p align="center">
 
-10. In the Application tab, make sure application_name appears in the Project field. If not, browse for the generated elf file.
+10. In the Application tab, make sure its application_name appears in the Project field. If not, browse for the generated elf file.
 
 <p align="center">
     <img src="./figures/step10.png" width=50% height=50%>
 </p> 
 <p align="center">Figure 11: Application tab - Run Configurations <p align="center">
  
-11. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](./Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure.
+11. Click on the "hier_mb_mb" from the "Summary" window and make sure its application_name appears in the Project field. Click on "Edits for more advanced options". Add the partial bitstream files ([Bitstreams/*.bin](./Bitstreams)) in the window "Data Files to download before launch" in the memory locations shown in the figure below.
 
 <p align="center">
     <img src="./figures/step11.png" width=50% height=50%>
