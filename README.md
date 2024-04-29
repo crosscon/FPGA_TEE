@@ -34,7 +34,7 @@ Due to the known issue of ([ZCU102](https://support.xilinx.com/s/article/71968?l
 </p> 
 <p align="center">Figure 3: Xilinx Vitis: Create New Application Project <p align="center">
  
- 3. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)). This file contains a description of the entire platform, including the hardware design representing the shell.
+ 3. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file ([Bitstreams/top.xsa](./Bitstreams/top.xsa)). This file contains a description of the entire platform, including the hardware design representing the shell.
 
 <p align="center">
     <img src="./figures/step3.png" width=50% height=50%>
@@ -51,7 +51,7 @@ Once loaded, keep the default settings and click next. In the field "Application
 <p align="center">Figure 5: Setting up a new Application from Template <p align="center">
 
 5. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right-click on the src folder. Choose from the menu import resources ... 
-In the field "From directory", provide the path to ([sdk/sources/zynq](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources/zynq)), the source files will appear in the window, select them and click finish. This application deactivates the PCAP and controls the application running on the FPGA shell.
+In the field "From directory", provide the path to ([sdk/sources/zynq](./sdk/sources/zynq)), the source files will appear in the window, select them and click finish. This application deactivates the PCAP and controls the application running on the FPGA shell.
 
 <p align="center">
     <img src="./figures/step5.png" width=50% height=50%>
@@ -65,52 +65,57 @@ In the field "From directory", provide the path to ([sdk/sources/zynq](https://g
 </p> 
 <p align="center">Figure 7: Compiling the Application <p align="center">
 
-7. Repeat steps 2 to 6. Select  "hier_mb_mb" processor as shown below. If the processor is not listed, check the "show all processors in the hardware specification" option. Use the source files provided in the ([sdk/sources/mb](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources/mb)) and build the project.
-
-7. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
+7. Repeat steps 2 to 6. Select  "hier_mb_mb" processor as shown below. If the processor is not listed, check the "show all processors in the hardware specification" option. Use the source files provided in the ([sdk/sources/mb](./sdk/sources/mb)) and build the project.
 
 <p align="center">
     <img src="./figures/step7.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 8: Creating Run Configurations <p align="center">
+<p align="center">Figure 8: Create New Application Project for MicroBlaze Soft Core <p align="center">
 
-8. Keep the default values in the Main tab and move to the next tab.
+    8. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
 
 <p align="center">
     <img src="./figures/step8.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 9: Main tab - Run Configurations <p align="center">
+<p align="center">Figure 9: Creating Run Configurations <p align="center">
 
-9. In the Application tab, make sure application_name appears in the Project field. If not, browse for the generated elf file.
+9. Keep the default values in the Main tab and move to the next tab.
 
 <p align="center">
     <img src="./figures/step9.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 10: Application tab - Run Configurations <p align="center">
- 
-10. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](https://github.com/crosscon/FPGA_TEE/tree/main/Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure.
+<p align="center">Figure 10: Main tab - Run Configurations <p align="center">
+
+10. In the Application tab, make sure application_name appears in the Project field. If not, browse for the generated elf file.
 
 <p align="center">
     <img src="./figures/step10.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 11: Uploading Partial Bitstreams - Run Configurations <p align="center">
-
- This step will upload the partial bitstreams in the memory allocated for the FPGA shell.
-
-11. In the "Target Setup" tab, fill the "Hardware Platform" and "Bitstream File" with the files provided in  ([Bitstreams/top.xsa](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.xsa)) and ([Bitstreams/top.bit](https://github.com/crosscon/FPGA_TEE/blob/main/Bitstreams/top.bit))
-In the "Summary" window, you will see the run steps.
+<p align="center">Figure 11: Application tab - Run Configurations <p align="center">
+ 
+11. Click on the "hier_mb_mb" from the "Summary" window and leave the Project and Application fields empty. Click on Edits for more advanced options. Add the partial bitstream files ([Bitstreams/*.bin](./Bitstreams)) in the window "Data Files to download before launch" in the locations shown in the figure.
 
 <p align="center">
     <img src="./figures/step11.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 12: Target Setup - Run Configurations <p align="center">
+<p align="center">Figure 12: Uploading Partial Bitstreams - Run Configurations <p align="center">
+
+ This step will upload the partial bitstreams in the memory allocated for the FPGA shell.
+
+12. In the "Target Setup" tab, fill the "Hardware Platform" and "Bitstream File" with the files provided in  ([Bitstreams/top.xsa](./Bitstreams/top.xsa)) and ([Bitstreams/top.bit](./Bitstreams/top.bit))
+In the "Summary" window, you will see the procedure steps.
+
+<p align="center">
+    <img src="./figures/step12.png" width=50% height=50%>
+</p> 
+<p align="center">Figure 13: Target Setup - Run Configurations <p align="center">
 
 Now connect the USB and JTAG on the ZCU102 board to your machine, as shown below:
 
 <p align="center">
     <img src="./figures/board.jpg" width=50% height=50%>
 </p> 
-<p align="center">Figure 13: ZCU102 Connections <p align="center">
+<p align="center">Figure 14: ZCU102 Connections <p align="center">
 
 Ensure SW6 is set to JTAG mode (all four switches are on). Then, open a serial terminal, COM7, with a baud rate 115200. 
 Once switched on, run the application in Xilinx Vitis. Once the FPGA is configured, we can see the Menu on the terminal.
@@ -119,35 +124,35 @@ The first two options unlock the virtual FPGAs to be reconfigured. In the figure
 <p align="center">
     <img src="./figures/demo1.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 14: Main Menu - FPGA Shell <p align="center">
+<p align="center">Figure 15: Main Menu - FPGA Shell <p align="center">
  
 Now, we can freely configure vFPGA_1. By typing 3, the shift left accelerator is loaded on vFPGA_1. 
 
 <p align="center">
     <img src="./figures/demo2.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 15: Configuring vFPGA_1 - FPGA Shell <p align="center">
+<p align="center">Figure 16: Configuring vFPGA_1 - FPGA Shell <p align="center">
 
   Typing 6 in the terminal shows that vFPGA_2 cannot be configured before being activated first.
  
 <p align="center">
     <img src="./figures/demo3.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 16: Configuring vFPGA_2 - FPGA Shell <p align="center">
+<p align="center">Figure 17: Configuring vFPGA_2 - FPGA Shell <p align="center">
 
 Activate vFPGA_2 by typing 2 in. 
 
 <p align="center">
     <img src="./figures/demo4.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 17: Activating vFPGA_2 - FPGA Shell <p align="center">
+<p align="center">Figure 18: Activating vFPGA_2 - FPGA Shell <p align="center">
 
  Now, vFPGA_2 can be reconfigured.
 
 <p align="center">
     <img src="./figures/demo5.png" width=50% height=50%>
 </p> 
-<p align="center">Figure 18: Exiting Demo <p align="center">
+<p align="center">Figure 19: Exiting Demo <p align="center">
 
  We can freely lock, activate and switch between the different accelerators on the vFPGAs. 
 Our next step is to implement a second trusted application that will communicate with the trusted application controlling the FPGA services and implement the necessary cryptographic operations to enable partial bitstream decryption and verification.
