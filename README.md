@@ -51,7 +51,7 @@ Once loaded, keep the default settings and click next. In the field "Application
 <p align="center">Figure 5: Setting up a new Application from Template <p align="center">
 
 5. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right-click on the src folder. Choose from the menu import resources ... 
-In the field "From directory", provide the path to ([sdk/sources/](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources)), the source files will appear in the window, select them and click finish. This application deactivates the PCAP and controls the application running on the FPGA shell.
+In the field "From directory", provide the path to ([sdk/sources/zynq](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources/zynq)), the source files will appear in the window, select them and click finish. This application deactivates the PCAP and controls the application running on the FPGA shell.
 
 <p align="center">
     <img src="./figures/step5.png" width=50% height=50%>
@@ -64,6 +64,8 @@ In the field "From directory", provide the path to ([sdk/sources/](https://githu
     <img src="./figures/step6.png" width=50% height=50%>
 </p> 
 <p align="center">Figure 7: Compiling the Application <p align="center">
+
+7. Repeat steps 2 to 6. Select  "hier_mb_mb" processor as shown below. If the processor is not listed, check the "show all processors in the hardware specification" option. Use the source files provided in the ([sdk/sources/mb](https://github.com/crosscon/FPGA_TEE/tree/main/sdk/sources/mb)) and build the project.
 
 7. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
 
