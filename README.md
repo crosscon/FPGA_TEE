@@ -273,7 +273,9 @@ You may also encounter build errors due to \<sys/uio.h\> being included by defau
 ```
 
 <img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
-__Figure 40__
+
+<center>**Figure 40**</center>
+
 <br><br><br>
 
 
