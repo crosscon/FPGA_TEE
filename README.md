@@ -238,8 +238,8 @@ wolfSSL requires a source of entropy for random number generation, which is unav
 <img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" />
 Figure 38<br>
 
-```
-\#include \<wolfssl/wolfcrypt/types.h\>
+```c
+#include <wolfssl/wolfcrypt/types.h>
 
 unsigned char my_rng_seed_gen(void) {
 
@@ -255,8 +255,8 @@ return (unsigned char)(seed & 0xFF);
 
 This lightweight linear congruential generator (LCG) provides basic entropy suitable for development. Make sure this function name matches the macro defined in your user_settings.h:
 
-```
-\#define CUSTOM_RAND_GENERATE my_rng_seed_gen
+```c
+#define CUSTOM_RAND_GENERATE my_rng_seed_gen
 ```
 
 <img src="images/media/image38.png" style="width:6.26772in;height:1.125in" />
@@ -264,11 +264,13 @@ Figure 39<br>
 
 You may also encounter build errors due to \<sys/uio.h\> being included by default in wolfssl/ssl.h. To prevent this, open wolfssl/ssl.h and locate the line around 3531 where \#include \<sys/uio.h\> appears. Wrap this line with the following preprocessor condition:
 
-\#if !defined(WOLFSSL_NO_IO)
+```c
+#if !defined(WOLFSSL_NO_IO)
 
-\#include \<sys/uio.h\>
+#include \<sys/uio.h\>
 
-\#endif
+#endif
+```
 
 <img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
 **Figure 40**
