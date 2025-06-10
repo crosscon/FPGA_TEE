@@ -245,7 +245,7 @@ unsigned char my_rng_seed_gen(void) {
 
 static unsigned int seed = 12345;
 
-seed = (seed \* 1103515245 + 12345) & 0xFFFFFFFF; // Simple LCG
+seed = (seed * 1103515245 + 12345) & 0xFFFFFFFF; // Simple LCG
 
 return (unsigned char)(seed & 0xFF);
 
@@ -267,13 +267,13 @@ You may also encounter build errors due to \<sys/uio.h\> being included by defau
 ```c
 #if !defined(WOLFSSL_NO_IO)
 
-#include \<sys/uio.h\>
+#include <sys/uio.h>
 
 #endif
 ```
 
 <img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
-**Figure 40**
+__Figure 40__
 <br><br><br>
 
 
