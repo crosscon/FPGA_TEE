@@ -1,0 +1,9 @@
+18:02:27 DEBUG : Logs will be stored at 'C:/Crosscon_original/IDE.log'.
+18:02:30 INFO  : Launching XSCT server: xsct.bat -n  -interactive C:\Crosscon_original\temp_xsdb_launch_script.tcl
+18:02:30 INFO  : Registering command handlers for Vitis TCF services
+18:02:31 INFO  : Platform repository initialization has completed.
+18:02:32 INFO  : XSCT server has started successfully.
+18:02:32 INFO  : plnx-install-location is set to ''
+18:02:32 INFO  : Successfully done setting XSCT server connection channel  
+18:02:32 INFO  : Successfully done query RDI_DATADIR 
+18:02:32 INFO  : Successfully done setting workspace for the tool. 

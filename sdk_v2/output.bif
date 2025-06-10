@@ -1,0 +1,10 @@
+//arch = zynqmp; split = false; format = BIN
+the_ROM_image:
+{
+	[bootloader, destination_cpu = r5-0]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\sdk_v2\FPGA_Demo\export\FPGA_Demo\sw\FPGA_Demo\boot\fsbl.elf
+	[destination_cpu = pmu]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\sdk_v2\FPGA_Demo\export\FPGA_Demo\sw\FPGA_Demo\boot\pmufw.elf
+	[destination_device = pl]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\project_shell_v2\bitstreams\top3.bit
+	[destination_cpu = a53-0, trustzone]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\sdk_v2\appx\Debug\appx.elf
+	[destination_cpu = r5-0]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\sdk_v2\fpga_ta\Debug\fpga_ta.elf
+	[load = 0x20000000, destination_cpu = a53-0]C:\Users\shaza\Documents\Xilinx_ZCU102\fpga_demo\project_shell_v2\bitstreams\vfpga1_shift_left_partial_icap_bs.bin
+}

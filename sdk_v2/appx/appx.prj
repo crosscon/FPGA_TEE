@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="appx" location="C:/Users/shaza/Documents/Xilinx_ZCU102/fpga_demo/sdk_v2/appx" platform="C:/Crosscon_original/sdk_v2/FPGA_Demo/export/FPGA_Demo/FPGA_Demo.xpfm" platformUID="xilinx.com:zcu102::1.0(custom)" systemProject="appx_system" sysConfig="FPGA_Demo" runtime="C/C++" cpu="domain_nonsecure_cortexa53_0" cpuInstance="psu_cortexa53_0" os="standalone" mssSignature="1dc390ae233e5233d1cf14326e00030a">
+  <configuration name="Debug" id="xilinx.gnu.arm.a53.exe.debug.1805397564">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+    <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <configuration name="Release" id="xilinx.gnu.arm.a53.exe.release.1971976161" dirty="true">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <template appTemplateName="empty_application"/>
+</sdkproject:SdkProject>
