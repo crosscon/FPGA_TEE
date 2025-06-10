@@ -17,7 +17,6 @@ In this repository, you can find the initial version of Secure FPGA Provisioning
 In this demo, an FPGA shell is implemented to take care of partial configuration through an internal configuration port (ICAP), which is internal to the FPGA fabric. In addition to the shell, two logically-isolated virtual FPGAs are implemented on the FPGA, each of which can be managed separately. On vFPGA_1, we can run a shift circuit (shifting right or left); on vFPGA_2, we can run a counter circuit (counting up or down). Figure 1 shows the block design of the FPGA shell, vFPGA_1 and vFPGA_2.
 
 <img src="images/media/image1.png" style="width:6.26806in;height:3.62569in" />
-
 Figure 1
 
 The figure also shows the external pins of our designs, count_out and shift_out, connected to the eight PL LEDs. Each vFPGA is connected to 4 PL LEDs on the board. The LED blinking pattern will reflect the direction (counting up or down) and (shifting right or left). The inputs on the design are connected to general-purpose switches (SW14, SW15, SW16, SW17, and SW18) to control the configuration controller manually. The configuration controller in the shell receives the required information from a trusted application, controls the FPGA resources, and provides FPGA services to other applications, i.e., which vFPGA and which bitstream to configure on it. The PCAP port can program the FPGA from the processing system, i.e., Arm cores. However, it can be used by any application to do so. To prevent unauthorized access to FPGA logic, the PCAP is deactivated (PCAP and ICAP work exclusively). The controlling application is responsible for deactivating PCAP, enabling ICAP, configuring the FPGA, and loading partial bitstreams in memory in preparation for the partial configuration process. This represents TA_FPGA, as discussed in D4.1.
@@ -31,11 +30,9 @@ After downloading the project, extract both folders to your drive. Do not rename
 If you encounter a "hardware not found" error, it is likely due to a mismatch in the hardware export path. To fix this, right-click the platform project, select **Update Hardware Specification**, and point it to the top_wrapper.xsa file located inside the project_shell_v2 folder (See Figures 2 and 3).
 
 <img src="images/media/image2.png" style="width:5.0625in;height:4.95833in" />
-
 Figure 2
 
 <img src="images/media/image3.png" style="width:6.26806in;height:2.63819in" />
-
 Figure 3
 
 Note: If you want to create your own project, please refer to **Appendix A**.
@@ -47,47 +44,41 @@ We are still working on debug mode. Former colleagues mention the problem of Xil
 1.  The current Vitis debug configuration is set up to launch all necessary processing units for the system: the Cortex-A53 core runs the appx application, the Cortex-R5 core runs the fpga_ta application, and the PMU is initialized with the pmufw.elf firmware. The pmufw.elf file is located in the ~sdk_v2/FPGA_Demo/export/FPGA_Demo/sw/FPGA_Demo/boot/ directory within the project structure. There is no need to manually add appx.elf and fpga_ta.elf; they will automatically appear in the debug configuration. All selected processors are configured to reset before execution to ensure proper initialization and coordination between components (See figure 4).
 
 <img src="images/media/image4.png" style="width:6.26772in;height:4.23611in" />
-
 Figure 4
 
 2.  Before running in debug mode, the partial bitstream should be uploaded to the system, see Figure 5. Choose appx/psu_cortexa53_0 and then click Edit in the Advanced Options. In the advanced options of the APU application launch, a single partial bitstream is specified to be downloaded to the FPGA before execution. This bitstream corresponds to the "shift left" functionality and is loaded at address 0x20000000. The directory of this partial bitstream ~project_shell_v2\bitstreams\vfpga1_shift_left_partial_icap_bs.bin.
 
 <img src="images/media/image5.png" style="width:6.26772in;height:4.48611in" />
-
 Figure 5
 
 3.  In the Target Setup (refer to Figure 6), the bitstream file should be manually selected. Click Browse in Bitstream File and choose the file in ~project_shell_v2\bitstreams\top3.bit.
 
 <img src="images/media/image6.png" style="width:6.26772in;height:4.22222in" />
-
 Figure 6
 
 4.  Now check if the necessary directories are sourced in for appx. Click and expand **appx_system -\>** Right click on **appx \[domain_nonsecure_cortexa53_0\] -\>** Click on **C/C++ Build Settings**. As shown in Figure 7, add the correct directories in ARM v8 gcc compiler. Click on Apply and rebuild **appx**.
 
 <img src="images/media/image7.png" style="width:6.26776in;height:6.24097in" />
-
 Figure 7
 
 5.  Check if the necessary directories are sourced in for fpga_ta. Click and expand **fpga_ta_system -\>** Right click on **fpga_ta \[domain_secure_cortexar5_0\] -\>** Click on **C/C++ Build Settings**. As shown in Figure 8, add the correct directories in the ARM v5 gcc compiler. Click on Apply and rebuild **fpga_ta**.
 
 <img src="images/media/image8.png" style="width:6.26806in;height:6.24097in" />
-
 Figure 8
 
 6.  Now connect the USB and JTAG on the ZCU102 board to your machine, as shown in Figure 9.
 
 <img src="images/media/image9.png" style="width:3.45625in;height:5.05764in" />
-
 Figure 9
 
-7.  <img src="images/media/image10.jpeg" style="width:2.88403in;height:2.73958in" />Ensure SW6 is set to JTAG mode (all four switches are on) as shown in Figure 10.
+7.  Ensure SW6 is set to JTAG mode (all four switches are on) as shown in Figure 10.
 
+<img src="images/media/image10.jpeg" style="width:2.88403in;height:2.73958in" />
 Figure 10
 
 8.  For the serial terminal, using **PuTTY (Figure 11)** is suggested, but you can use any other terminal program of your choice.
 
 <img src="images/media/image11.png" style="width:4.28646in;height:3.76215in" />
-
 Figure 11
 
 9.  Then, open two serial terminals—one for appx and one for fpga_ta, both on the appropriate COM (dependent on the home device ) ports with a baud rate of 115200. If you see more than two COM ports In your Device Manager, it is useful to open a serial terminal for all of them. You can then keep the two that show output.
@@ -112,11 +103,9 @@ The terminal output demonstrates a manual, step-by-step secure partial reconfigu
 Next, APPx logs the memory addresses for the requested accelerator’s plain bitstream, encrypted version, and tag. AES-GCM parameters—including keys, IVs, AADs, and expected tags—are manually set and displayed. Each element (key chunks, IV, AAD) is then transferred to TA_FPGA and acknowledged as received.
 
 <img src="images/media/image13.png" style="width:4.66111in;height:3.47639in" />An interrupt confirms successful processing, and the system reports that decryption and authentication were completed successfully.
-
 Figure 13
 
 <img src="images/media/image14.png" style="width:2.39028in;height:5.05903in" />
-
 Figure 14
 
 <img src="images/media/image15.png" style="width:2.93819in;height:5.0625in" />Figure 15
@@ -130,7 +119,6 @@ Upon receiving messages from APPx via inter-processor interrupts, TA_FPGA begins
 After successful decryption and validation of the AES-GCM parameters, the encrypted bitstream is authenticated. TA_FPGA confirms the bitstream integrity and starts secure partial reconfiguration of the “Shift Left” accelerator at the specified address. Once the configuration is complete, a confirmation message is sent back to APPx.
 
 <img src="images/media/image16.png" style="width:3.55694in;height:5.90903in" />Overall, the output confirms that TA_FPGA correctly receives all cryptographic parameters, securely decrypts the AES key, authenticates the bitstream, and completes the accelerator reconfiguration—demonstrating the full secure boot and configuration pipeline in a transparent, debug-friendly manner.
-
 Figure 16
 
 <img src="images/media/image17.png" style="width:4.26042in;height:5.90625in" />Figure 17
@@ -148,63 +136,70 @@ Figure 16
 <img src="images/media/image19.png" style="width:6.03178in;height:4.50429in" />Figure 19
 
 3\. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file (project_shell_v2/top_wrapper.xsa). This file contains a description of the entire platform, including the hardware design representing the shell. Choose to generate boot components on psu cortexr5_0.<img src="images/media/image20.png" style="width:6.26772in;height:1.56944in" />
-
 Figure 20
 
 Once loaded, keep the default settings and click Next. In the field "Application project name," provide the application name. Make sure the application is associated with the processor psu_cortexa53_0 and click next.
 
-<img src="images/media/image21.png" style="width:4.40104in;height:3.65535in" />Figure 21
+<img src="images/media/image21.png" style="width:4.40104in;height:3.65535in" />
+Figure 21
 
 <img src="images/media/image22.png" style="width:6.26772in;height:5.22222in" />
-
 Figure 22
 
 4\. Keep default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" />
-
 Figure 23
 
 5. In the Explorer tab, you can see the application_name. Expand it and right-click on the src folder. Choose from the menu import resources ... In the field "From directory", provide the path to (sdk_v2\appx\src), the source files will appear in the window, select them, and click finish.
 
 <img src="images/media/image24.png" style="width:6.26806in;height:3.36597in" />
-
 Figure 24
 
 6\. In the Project Explorer, right click on *FPGA_Demo*, choose *New*, then choose *Application Project…,* click *Next*, choose *Select a platform from the repository*, and choose FPGA_Demo.
 
 <img src="images/media/image25.png" style="width:6.26806in;height:5.03056in" />
-
 Figure 25
 
-7\. Choose “psu_cortexr5_0” processor as shown below. If the processor is not listed, check the “show all processors in the hardware specification” option. Use the source files provided in the (sdk_v2\fpga_ta\src) and build the project.<img src="images/media/image26.png" style="width:4.95313in;height:4.92844in" />
+7\. Choose “psu_cortexr5_0” processor as shown below. If the processor is not listed, check the “show all processors in the hardware specification” option. Use the source files provided in the (sdk_v2\fpga_ta\src) and build the project.
 
+<img src="images/media/image26.png" style="width:4.95313in;height:4.92844in" />
 Figure 26
 
-8\. Keep the default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" />
+8\. Keep the default settings and click next. From "Templates", choose an empty application (c) and click finish.
 
+<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" />
 Figure 27
 
 9\. In the Explorer tab, you can see the application_name. Expand it and right-click on the src folder. Choose from the menu, import resources ... In the field "From directory", provide the path to (sdk_v2\fpga_ta\src), the source files will appear in the window, select them, and click finish.
 
 <img src="images/media/image27.png" style="width:6.26806in;height:4.40972in" />
-
 Figure 28
 
 ### A.2 Integrating WolfSSL
 
 To integrate the **wolfSSL v5.7.6** cryptographic library into a standalone Vitis project targeting both the APU (appx) and RPU (fpga_ta) on a Xilinx Zynq UltraScale+ platform, several manual steps must be followed to ensure compatibility with the bare-metal environment. First, download and extract the wolfSSL source archive. Then, import the necessary source files into each application project. For both appx and fpga_ta, navigate in Vitis to the source folder (e.g., appx/src/ or fpga_ta/src/) and import **all files** from the wolfssl/src/ directory and the wolfssl/wolfcrypt/src/ directory. It is important to delete all .S assembly files inside wolfssl/wolfcrypt/src/ after import, as these are not supported by the standalone ARM toolchain and will lead to errors. Additionally, within the wolfssl/wolfcrypt/src/port/ directory, delete everything **except** the xilinx/ folder and nrf51.c.
 
-Next, integrate the custom user configuration header file by defining the preprocessor symbol WOLFSSL_USER_SETTINGS in both application projects. In Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → ARM v8 (for appx) or ARM v7 (for fpga_ta) → Compiler → Symbols**, and add WOLFSSL_USER_SETTINGS to the list. There is **no need to explicitly add user_settings.h to the src/ folder** of the project; it will automatically be picked up from <img src="images/media/image28.png" style="width:6.26806in;height:5.79583in" />the include paths once the wolfSSL source directory is properly added to the project.
+Next, integrate the custom user configuration header file by defining the preprocessor symbol WOLFSSL_USER_SETTINGS in both application projects. In Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → ARM v8 (for appx) or ARM v7 (for fpga_ta) → Compiler → Symbols**, and add WOLFSSL_USER_SETTINGS to the list. There is **no need to explicitly add user_settings.h to the src/ folder** of the project; it will automatically be picked up from the include paths once the wolfSSL source directory is properly added to the project.
 
+<img src="images/media/image28.png" style="width:6.26806in;height:5.79583in" />
 Figure 29
 
-<img src="images/media/image29.png" style="width:3.13892in;height:3.84231in" /><img src="images/media/image30.png" style="width:3.05177in;height:3.84375in" /> Figure 30
+<img src="images/media/image29.png" style="width:3.13892in;height:3.84231in" />
+Figure 30
+
+<img src="images/media/image30.png" style="width:3.05177in;height:3.84375in" /> 
+Figure 31
 
 Then, in the Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Compiler → Includes**, and add the following two include paths:
 
 - ../wolfssl
 
 - ../wolfssl/IDE/XilinxSDK  
-  <img src="images/media/image31.png" style="width:3.33477in;height:3.82131in" /><img src="images/media/image32.png" style="width:2.95313in;height:3.8752in" />Figure 31
+  
+<img src="images/media/image31.png" style="width:3.33477in;height:3.82131in" />
+Figure 32
+
+<img src="images/media/image32.png" style="width:2.95313in;height:3.8752in" />
+Figure 33
 
 To avoid linker script errors, such as lscript.ld not found, it is sometimes necessary to explicitly specify the path to the linker script in both application projects. In Vitis, this can be done by navigating to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Linker → Miscellaneous** and adding the following flag to the “Other flags” field:
 
@@ -212,23 +207,26 @@ To avoid linker script errors, such as lscript.ld not found, it is sometimes nec
 
 If your lscript.ld file is located in a different directory, you should update the path accordingly to reflect its actual location. This step should be applied to both the appx and fpga_ta projects to ensure that the linker can locate and use the correct script during the build process. **However, be careful.** If you are not encountering a missing lscript.ld error, and the script is already being handled correctly by Vitis, manually adding the -T flag can lead to memory region redeclaration issues. This may result in duplicated memory mappings in the final link stage, which can cause runtime hangs or unpredictable behavior. Therefore, only apply this manual step if you are explicitly facing linker script path errors.
 
-<img src="images/media/image33.png" style="width:3.09792in;height:3.73958in" /><img src="images/media/image34.png" style="width:2.83819in;height:3.73611in" />Figure 32
+<img src="images/media/image33.png" style="width:3.09792in;height:3.73958in" />
+Figure 34
+
+<img src="images/media/image34.png" style="width:2.83819in;height:3.73611in" />
+Figure 35
 
 To ensure stable operation of the wolfSSL cryptographic functions in a standalone environment, appropriate stack and heap sizes must be configured for each application. In the appx project, which runs on the Cortex-A53 and handles RSA operations and other computationally intensive tasks, the stack size is set to 0x8000 (32 KB) and the heap size to 0x4000 (16 KB) in the lscript.ld file. This provides sufficient space for cryptographic computations without causing memory overflow.
 
 <img src="images/media/image35.png" style="width:6.26806in;height:3.275in" />
-
-Figure 33
+Figure 36
 
 For the fpga_ta project running on the Cortex-R5, larger memory allocations are required due to its execution model and the overhead of secure tasks. Here, the stack size is increased to 0x10000 (64 KB) and the heap size to 0x8000 (32 KB). These settings help prevent stack corruption or heap exhaustion during RSA key handling, buffer-based operations, or modular arithmetic. Both configurations are applied via the Vitis GUI under **Stack and Heap Sizes**, and they should be carefully maintained in line with the expected cryptographic workload of each processing domain.
 
 <img src="images/media/image36.png" style="width:6.26806in;height:3.27778in" />
-
-Figure 34
+Figure 37
 
 wolfSSL requires a source of entropy for random number generation, which is unavailable in standalone bare-metal environments. To address this, implement a custom random seed function named my_rng_seed_gen. You should place it in src/wolfcrypt/src/ for both application projects. Create a file named my_rng_seed_gen.c in appx/src/wolfcrypt/src/ and fpga_ta/src/wolfcrypt/src/, and add the following implementation:
 
-<img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" />Figure 35
+<img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" />
+Figure 38
 
 \#include \<wolfssl/wolfcrypt/types.h\>
 
@@ -247,8 +245,7 @@ This lightweight linear congruential generator (LCG) provides basic entropy suit
 \#define CUSTOM_RAND_GENERATE my_rng_seed_gen
 
 <img src="images/media/image38.png" style="width:6.26772in;height:1.125in" />
-
-Figure 36
+Figure 39
 
 You may also encounter build errors due to \<sys/uio.h\> being included by default in wolfssl/ssl.h. To prevent this, open wolfssl/ssl.h and locate the line around 3531 where \#include \<sys/uio.h\> appears. Wrap this line with the following preprocessor condition:
 
@@ -259,8 +256,7 @@ You may also encounter build errors due to \<sys/uio.h\> being included by defau
 \#endif
 
 <img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
-
-Figure 37
+Figure 40
 
 After these adjustments, both appx and fpga_ta will compile and link successfully with wolfSSL, supporting standalone cryptographic operations, most importantly, RSA encryption without relying on an operating system or file system.
 
