@@ -52,13 +52,13 @@ Figure 4
 
 2.  Before running in debug mode, the partial bitstream should be uploaded to the system, see Figure 5. Choose appx/psu_cortexa53_0 and then click Edit in the Advanced Options. In the advanced options of the APU application launch, a single partial bitstream is specified to be downloaded to the FPGA before execution. This bitstream corresponds to the "shift left" functionality and is loaded at address 0x20000000. The directory of this partial bitstream ~project_shell_v2\bitstreams\vfpga1_shift_left_partial_icap_bs.bin.
 
-<img src="images/media/image5.png" style="width:6.26772in;height:4.48611in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />
+<img src="images/media/image5.png" style="width:6.26772in;height:4.48611in" />
 
 Figure 5
 
 3.  In the Target Setup (refer to Figure 6), the bitstream file should be manually selected. Click Browse in Bitstream File and choose the file in ~project_shell_v2\bitstreams\top3.bit.
 
-<img src="images/media/image6.png" style="width:6.26772in;height:4.22222in" alt="图形用户界面, 文本, 应用程序, 电子邮件 AI 生成的内容可能不正确。" />
+<img src="images/media/image6.png" style="width:6.26772in;height:4.22222in" />
 
 Figure 6
 
@@ -70,7 +70,7 @@ Figure 7
 
 5.  Check if the necessary directories are sourced in for fpga_ta. Click and expand **fpga_ta_system -\>** Right click on **fpga_ta \[domain_secure_cortexar5_0\] -\>** Click on **C/C++ Build Settings**. As shown in Figure 8, add the correct directories in the ARM v5 gcc compiler. Click on Apply and rebuild **fpga_ta**.
 
-<img src="images/media/image8.png" style="width:6.26806in;height:6.24097in" alt="A screenshot of a computer AI-generated content may be incorrect." />
+<img src="images/media/image8.png" style="width:6.26806in;height:6.24097in" />
 
 Figure 8
 
@@ -80,13 +80,13 @@ Figure 8
 
 Figure 9
 
-7.  <img src="images/media/image10.jpeg" style="width:2.88403in;height:2.73958in" alt="图片包含 游戏机, 电子, 电路 AI 生成的内容可能不正确。" />Ensure SW6 is set to JTAG mode (all four switches are on) as shown in Figure 10.
+7.  <img src="images/media/image10.jpeg" style="width:2.88403in;height:2.73958in" />Ensure SW6 is set to JTAG mode (all four switches are on) as shown in Figure 10.
 
 Figure 10
 
 8.  For the serial terminal, using **PuTTY (Figure 11)** is suggested, but you can use any other terminal program of your choice.
 
-<img src="images/media/image11.png" style="width:4.28646in;height:3.76215in" alt="图形用户界面 AI 生成的内容可能不正确。" />
+<img src="images/media/image11.png" style="width:4.28646in;height:3.76215in" />
 
 Figure 11
 
@@ -98,7 +98,7 @@ Figure 11
 
 10. Now we are ready to run and deploy. Make sure the board is turned on and connected. Right click on **appx** **-\> Run as -\> Run Configurations -\>** **Debugger_appx_Default_1** -\> **Run**. You should see a window as shown in Figure 12. Once completed, the output should be visible on the serial terminals.
 
-<img src="images/media/image12.png" style="width:6.26806in;height:2.13611in" alt="A green line on a white background AI-generated content may be incorrect." />  
+<img src="images/media/image12.png" style="width:6.26806in;height:2.13611in" />  
 Figure 12
 
 ## 4. Results
@@ -119,7 +119,7 @@ Figure 13
 
 Figure 14
 
-<img src="images/media/image15.png" style="width:2.93819in;height:5.0625in" alt="文本 AI 生成的内容可能不正确。" />Figure 15
+<img src="images/media/image15.png" style="width:2.93819in;height:5.0625in" />Figure 15
 
 ### 4.2 FPGA_TA:
 
@@ -133,7 +133,7 @@ After successful decryption and validation of the AES-GCM parameters, the encryp
 
 Figure 16
 
-<img src="images/media/image17.png" style="width:4.26042in;height:5.90625in" alt="文本 AI 生成的内容可能不正确。" />Figure 17
+<img src="images/media/image17.png" style="width:4.26042in;height:5.90625in" />Figure 17
 
 ## **Appendix A**
 
@@ -141,31 +141,31 @@ Figure 16
 
 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1.
 
-<img src="images/media/image18.png" style="width:6.26772in;height:3.52778in" alt="图形用户界面, 文本, 应用程序, Word AI 生成的内容可能不正确。" />Figure 18
+<img src="images/media/image18.png" style="width:6.26772in;height:3.52778in" />Figure 18
 
 2. Choose "Create Application Project" and click Next.
 
-<img src="images/media/image19.png" style="width:6.03178in;height:4.50429in" alt="图形用户界面 AI 生成的内容可能不正确。" />Figure 19
+<img src="images/media/image19.png" style="width:6.03178in;height:4.50429in" />Figure 19
 
-3\. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file (project_shell_v2/top_wrapper.xsa). This file contains a description of the entire platform, including the hardware design representing the shell. Choose to generate boot components on psu cortexr5_0.<img src="images/media/image20.png" style="width:6.26772in;height:1.56944in" alt="图形用户界面, 文本, 应用程序, 聊天或短信 AI 生成的内容可能不正确。" />
+3\. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file (project_shell_v2/top_wrapper.xsa). This file contains a description of the entire platform, including the hardware design representing the shell. Choose to generate boot components on psu cortexr5_0.<img src="images/media/image20.png" style="width:6.26772in;height:1.56944in" />
 
 Figure 20
 
 Once loaded, keep the default settings and click Next. In the field "Application project name," provide the application name. Make sure the application is associated with the processor psu_cortexa53_0 and click next.
 
-<img src="images/media/image21.png" style="width:4.40104in;height:3.65535in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />Figure 21
+<img src="images/media/image21.png" style="width:4.40104in;height:3.65535in" />Figure 21
 
-<img src="images/media/image22.png" style="width:6.26772in;height:5.22222in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+<img src="images/media/image22.png" style="width:6.26772in;height:5.22222in" />
 
 Figure 22
 
-4\. Keep default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+4\. Keep default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" />
 
 Figure 23
 
 5. In the Explorer tab, you can see the application_name. Expand it and right-click on the src folder. Choose from the menu import resources ... In the field "From directory", provide the path to (sdk_v2\appx\src), the source files will appear in the window, select them, and click finish.
 
-<img src="images/media/image24.png" style="width:6.26806in;height:3.36597in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />
+<img src="images/media/image24.png" style="width:6.26806in;height:3.36597in" />
 
 Figure 24
 
@@ -175,11 +175,11 @@ Figure 24
 
 Figure 25
 
-7\. Choose “psu_cortexr5_0” processor as shown below. If the processor is not listed, check the “show all processors in the hardware specification” option. Use the source files provided in the (sdk_v2\fpga_ta\src) and build the project.<img src="images/media/image26.png" style="width:4.95313in;height:4.92844in" alt="图形用户界面, 文本, 应用程序, 电子邮件 AI 生成的内容可能不正确。" />
+7\. Choose “psu_cortexr5_0” processor as shown below. If the processor is not listed, check the “show all processors in the hardware specification” option. Use the source files provided in the (sdk_v2\fpga_ta\src) and build the project.<img src="images/media/image26.png" style="width:4.95313in;height:4.92844in" />
 
 Figure 26
 
-8\. Keep the default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+8\. Keep the default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" />
 
 Figure 27
 
@@ -197,14 +197,14 @@ Next, integrate the custom user configuration header file by defining the prepro
 
 Figure 29
 
-<img src="images/media/image29.png" style="width:3.13892in;height:3.84231in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" /><img src="images/media/image30.png" style="width:3.05177in;height:3.84375in" alt="图形用户界面 AI 生成的内容可能不正确。" /> Figure 30
+<img src="images/media/image29.png" style="width:3.13892in;height:3.84231in" /><img src="images/media/image30.png" style="width:3.05177in;height:3.84375in" /> Figure 30
 
 Then, in the Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Compiler → Includes**, and add the following two include paths:
 
 - ../wolfssl
 
 - ../wolfssl/IDE/XilinxSDK  
-  <img src="images/media/image31.png" style="width:3.33477in;height:3.82131in" alt="图形用户界面 AI 生成的内容可能不正确。" /><img src="images/media/image32.png" style="width:2.95313in;height:3.8752in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />Figure 31
+  <img src="images/media/image31.png" style="width:3.33477in;height:3.82131in" /><img src="images/media/image32.png" style="width:2.95313in;height:3.8752in" />Figure 31
 
 To avoid linker script errors, such as lscript.ld not found, it is sometimes necessary to explicitly specify the path to the linker script in both application projects. In Vitis, this can be done by navigating to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Linker → Miscellaneous** and adding the following flag to the “Other flags” field:
 
@@ -212,7 +212,7 @@ To avoid linker script errors, such as lscript.ld not found, it is sometimes nec
 
 If your lscript.ld file is located in a different directory, you should update the path accordingly to reflect its actual location. This step should be applied to both the appx and fpga_ta projects to ensure that the linker can locate and use the correct script during the build process. **However, be careful.** If you are not encountering a missing lscript.ld error, and the script is already being handled correctly by Vitis, manually adding the -T flag can lead to memory region redeclaration issues. This may result in duplicated memory mappings in the final link stage, which can cause runtime hangs or unpredictable behavior. Therefore, only apply this manual step if you are explicitly facing linker script path errors.
 
-<img src="images/media/image33.png" style="width:3.09792in;height:3.73958in" alt="图形用户界面 AI 生成的内容可能不正确。" /><img src="images/media/image34.png" style="width:2.83819in;height:3.73611in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />Figure 32
+<img src="images/media/image33.png" style="width:3.09792in;height:3.73958in" /><img src="images/media/image34.png" style="width:2.83819in;height:3.73611in" />Figure 32
 
 To ensure stable operation of the wolfSSL cryptographic functions in a standalone environment, appropriate stack and heap sizes must be configured for each application. In the appx project, which runs on the Cortex-A53 and handles RSA operations and other computationally intensive tasks, the stack size is set to 0x8000 (32 KB) and the heap size to 0x4000 (16 KB) in the lscript.ld file. This provides sufficient space for cryptographic computations without causing memory overflow.
 
@@ -222,13 +222,13 @@ Figure 33
 
 For the fpga_ta project running on the Cortex-R5, larger memory allocations are required due to its execution model and the overhead of secure tasks. Here, the stack size is increased to 0x10000 (64 KB) and the heap size to 0x8000 (32 KB). These settings help prevent stack corruption or heap exhaustion during RSA key handling, buffer-based operations, or modular arithmetic. Both configurations are applied via the Vitis GUI under **Stack and Heap Sizes**, and they should be carefully maintained in line with the expected cryptographic workload of each processing domain.
 
-<img src="images/media/image36.png" style="width:6.26806in;height:3.27778in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+<img src="images/media/image36.png" style="width:6.26806in;height:3.27778in" />
 
 Figure 34
 
 wolfSSL requires a source of entropy for random number generation, which is unavailable in standalone bare-metal environments. To address this, implement a custom random seed function named my_rng_seed_gen. You should place it in src/wolfcrypt/src/ for both application projects. Create a file named my_rng_seed_gen.c in appx/src/wolfcrypt/src/ and fpga_ta/src/wolfcrypt/src/, and add the following implementation:
 
-<img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" alt="图形用户界面, 文本, 应用程序, 聊天或短信 AI 生成的内容可能不正确。" />Figure 35
+<img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" />Figure 35
 
 \#include \<wolfssl/wolfcrypt/types.h\>
 
@@ -246,7 +246,7 @@ This lightweight linear congruential generator (LCG) provides basic entropy suit
 
 \#define CUSTOM_RAND_GENERATE my_rng_seed_gen
 
-<img src="images/media/image38.png" style="width:6.26772in;height:1.125in" alt="文本, 信件 AI 生成的内容可能不正确。" />
+<img src="images/media/image38.png" style="width:6.26772in;height:1.125in" />
 
 Figure 36
 
@@ -258,7 +258,7 @@ You may also encounter build errors due to \<sys/uio.h\> being included by defau
 
 \#endif
 
-<img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" alt="文本 AI 生成的内容可能不正确。" />
+<img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
 
 Figure 37
 
