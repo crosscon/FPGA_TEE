@@ -1,161 +1,272 @@
-
 # Secure FPGA Provisioning
 
-In this repository, you can find the initial version of Secure FPGA Provisioning, which provides secure FPGA-based acceleration and enables IP protection on FPGA-enabled SoCs within [CROSSCON project](https://crosscon.eu/). This work is part of deliverable 4.2 (CROSSCON Extension Primitives to Domain Specific Hardware Architectures — Initial Version) and deliverable 3.2 (CROSSCON Open Security Stack – Initial Version). The repository contains three folders. Folder Bitstreams contains a primary bitstream and four partial bitstreams. Each partial bitstream represents a configuration file corresponding to a specific accelerator targeting a virtual FPGA, e.g., file vfpga_1_shift_left_partial.bin configures a shift left accelerator on vFPGA_1. Folder figures shows the demo sequence, and folder sdk contains the Xilinx Vitis source files to replicate the demo. For a detailed description of the Secure FPGA Provisioning demo, please refer to the deliverable 4.1 (CROSSCON Extensions to Domain Specific Hardware Architectures Documentation — Draft) of the CROSSCON project.
+In this repository, you can find the initial version of Secure FPGA Provisioning, which provides secure FPGA-based acceleration and enables IP protection on FPGA-enabled SoCs within \[CROSSCON project\](https://crosscon.eu/). This work is part of deliverable 4.2, 4,.3 (CROSSCON Extension Primitives to Domain Specific Hardware Architectures — Initia/Final Version) and deliverable 3.2/3.3 (CROSSCON Open Security Stack – Initial/Final Version). Folder Bitstreams contains a primary bitstream and four partial bitstreams. Each partial bitstream represents a configuration file corresponding to a specific accelerator targeting a virtual FPGA, e.g., file vfpga_1_shift_left_partial.bin configures a shift left accelerator on vFPGA_1. The folder figures shows the demo sequence, and the folder SDK contains the Xilinx Vitis source files to replicate the demo. For a detailed description of the Secure FPGA Provisioning demo, please refer to the deliverable 4.1 (CROSSCON Extensions to Domain Specific Hardware Architectures Documentation — Draft) of the CROSSCON project.
 
-## What is the Demo about?
+## **1. Prerequisites**
 
-In this demo, an FPGA shell is implemented to take care of partial configuration through an internal configuration port (ICAP) port, which is internal to the FPGA fabric. In addition to the shell, two logically-isolated virtual FPGAs are implemented on the FPGA, each of which can be managed separately.
-On vFPGA_1, we can run a shift circuit (shifting right or left); on vFPGA_2, we can run a counter circuit (counting up or down). Figure 1 shows the block design of the FPGA shell, vFPGA_1 and vFPGA_2.
+- Xilinx Vitis 2023.1
 
-<p align="center">
-    <img src="./figures/design.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 1: FPGA Fabric Split into Shell, vFPGA_1 and vFPGA_2 <p align="center">
- 
-The figure also shows the external pins of our designs, count_out and shift_out, connected to the eight PL LEDs. Each vFPGA is connected to 4 PL LEDs on the board (See Figure 13). The LED blinking pattern will reflect the direction (counting up or down) and (shifting right or left). The inputs on the design are connected to general-purpose switches (SW14, SW15, SW16, SW17 and SW18) to control the configuration controller manually.  
-The configuration controller in the shell receives the required information from a trusted application, controls the FPGA resources, and provides FPGA services to other applications, i.e., which vFPGA and which bitstream to configure on it. 
-The PCAP port can program the FPGA from the processing system, i.e., Arm cores. However, it can be used by any application to do so. To prevent unauthorized access to FPGA logic, the PCAP is deactivated (PCAP and ICAP work exclusively). The controlling application is responsible for deactivating PCAP, enabling ICAP, configuring the FPGA, and loading partial bitstreams in memory in preparation for the partial configuration process.  This represents TA_FPGA, as discussed in D4.1.
+- A pre-configured BSP for both application projects (appx, fpga_ta)
 
-## How to run it?
-Due to the known issue of ([ZCU102](https://support.xilinx.com/s/article/71968?language=en_US)) Evaluation Board, we are running the demo in the debug mode. Due to this limitation, we could only test basic functionality with the FPGA. That is, we used a user interface to interact with the controlling application rather than implementing another application that communicates with the controlling application to request FPGA services. To recreate the Vitis workspace, follow these simple steps:
+- wolfSSL v5.7.6 source code (downloaded and extracted, or we can use it directly from the folder: wolfssl)
 
- 1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1.
+- Custom user_settings.h for standalone configuration (provided)
 
-<p align="center">
-    <img src="./figures/step1.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 2: Xilinx Vitis <p align="center">
- 
- 2. Choose "Create Application Project" and click next.
+## **2. What is the Demo about?**
 
-<p align="center">
-    <img src="./figures/step2.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 3: Xilinx Vitis: Create New Application Project <p align="center">
- 
- 3. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file ([Bitstreams/top.xsa](./Bitstreams/top.xsa)). This file contains a description of the entire platform, including the hardware design representing the shell.
+In this demo, an FPGA shell is implemented to take care of partial configuration through an internal configuration port (ICAP), which is internal to the FPGA fabric. In addition to the shell, two logically-isolated virtual FPGAs are implemented on the FPGA, each of which can be managed separately. On vFPGA_1, we can run a shift circuit (shifting right or left); on vFPGA_2, we can run a counter circuit (counting up or down). Figure 1 shows the block design of the FPGA shell, vFPGA_1 and vFPGA_2.
 
-<p align="center">
-    <img src="./figures/step3.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 4: Loading Platform Description <p align="center">
- 
-Once loaded, keep the default settings and click next. In the field "Application project name," provide the application name. Make sure the application is associated with processor psu_cortexa53_0 and click next. Keep default settings and click next.
+<img src="images/media/image1.png" style="width:6.26806in;height:3.62569in" />
 
-4. From "Templates", choose an empty application (c) and click finish.
+Figure 1
 
-<p align="center">
-    <img src="./figures/step4.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 5: Setting up a new Application from Template <p align="center">
+The figure also shows the external pins of our designs, count_out and shift_out, connected to the eight PL LEDs. Each vFPGA is connected to 4 PL LEDs on the board. The LED blinking pattern will reflect the direction (counting up or down) and (shifting right or left). The inputs on the design are connected to general-purpose switches (SW14, SW15, SW16, SW17, and SW18) to control the configuration controller manually. The configuration controller in the shell receives the required information from a trusted application, controls the FPGA resources, and provides FPGA services to other applications, i.e., which vFPGA and which bitstream to configure on it. The PCAP port can program the FPGA from the processing system, i.e., Arm cores. However, it can be used by any application to do so. To prevent unauthorized access to FPGA logic, the PCAP is deactivated (PCAP and ICAP work exclusively). The controlling application is responsible for deactivating PCAP, enabling ICAP, configuring the FPGA, and loading partial bitstreams in memory in preparation for the partial configuration process. This represents TA_FPGA, as discussed in D4.1.
 
-5. In the Explorer tab, you can see the application_name [standalone_psu_cortexta53_0]. Expand it and right-click on the src folder. Choose from the menu import resources ... 
-In the field "From directory", provide the path to ([sdk/sources/zynq](./sdk/sources/zynq)), the source files will appear in the window, select them and click finish. This application deactivates the PCAP and controls the application running on the FPGA shell.
+## **3. Directly use the project (Recommended)**
 
-<p align="center">
-    <img src="./figures/step5.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 6: Adding Source Files to the Application <p align="center">
- 
-6. Right-click on the application_name [standalone_psu_cortexta53_0] and choose Build Project.
+This document outlines the steps for a standalone bare-metal project in Xilinx Vitis for Zynq UltraScale+ devices, including both APU (appx) and RPU (fpga_ta) applications. In the Repository, there are two main folders: sdk_v2 and project_shell_v2, and other folders such as wolfssl. All necessary development and integration steps will be carried out inside the sdk_v2 folder using Vitis. The project_shell_v2 folder already contains the completed hardware design and pre-generated bitstreams required for RSA integration, so no changes are needed on that side.
 
-<p align="center">
-    <img src="./figures/step6.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 7: Compiling the Application <p align="center">
+After downloading the project, extract both folders to your drive. Do not rename any folders, especially project_shell_v2, as this can cause path resolution issues within Vitis. Once extracted, launch Vitis and set the workspace to the sdk_v2 directory. Inside the workspace, you will find a system project named FPGA_Demo, and two application projects: appx and fpga_ta. The appx application runs on the Cortex-A53 core, while fpga_ta runs on the Cortex-R5 core. Both are configured as standalone applications with their respective platform projects.
 
-7. Repeat steps 2 to 6. Select  "hier_mb_mb" processor as shown below. If the processor is not listed, check the "show all processors in the hardware specification" option. Use the source files provided in the ([sdk/sources/mb](./sdk/sources/mb)) and build the project.
+If you encounter a "hardware not found" error, it is likely due to a mismatch in the hardware export path. To fix this, right-click the platform project, select **Update Hardware Specification**, and point it to the top_wrapper.xsa file located inside the project_shell_v2 folder (See Figures 2 and 3).
 
-<p align="center">
-    <img src="./figures/step7.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 8: Create New Application Project for MicroBlaze Soft Core <p align="center">
+<img src="images/media/image2.png" style="width:5.0625in;height:4.95833in" />
 
-8. In the main toolbar, select the small drop menu next to the run symbol and select "Run Configurations.." Select "Single Application Debug" and create a new one.
+Figure 2
 
-<p align="center">
-    <img src="./figures/step8.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 9: Creating Run Configurations <p align="center">
+<img src="images/media/image3.png" style="width:6.26806in;height:2.63819in" />
 
-9. Keep the default values in the Main tab and move to the next tab.
+Figure 3
 
-<p align="center">
-    <img src="./figures/step9.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 10: Main tab - Run Configurations <p align="center">
+Note: If you want to create your own project, please refer to **Appendix A**.
 
-10. In the Application tab, make sure its application_name appears in the Project field. If not, browse for the generated elf file.
+## **3. How to run it?**
 
-<p align="center">
-    <img src="./figures/step10.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 11: Application tab - Run Configurations <p align="center">
- 
-11. Click on the "hier_mb_mb" from the "Summary" window and make sure its application_name appears in the Project field. Click on "Edits for more advanced options". Add the partial bitstream files ([Bitstreams/*.bin](./Bitstreams)) in the window "Data Files to download before launch" in the memory locations shown in the figure below.
+We are still working on debug mode. Former colleagues mention the problem of Xilinx (<https://support.xilinx.com/s/article/71968?language=en_US>), which means the former ZCU102 can only work in debug mode. Now we have a new ZCU102 board. The SD card model will be added later when multi-client functions are realized. Here, we still use the debug mode and use a user interface to interact with the controlling application rather than implementing another application that communicates with the controlling application to request FPGA services.
 
-<p align="center">
-    <img src="./figures/step11.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 12: Uploading Partial Bitstreams - Run Configurations <p align="center">
+1.  The current Vitis debug configuration is set up to launch all necessary processing units for the system: the Cortex-A53 core runs the appx application, the Cortex-R5 core runs the fpga_ta application, and the PMU is initialized with the pmufw.elf firmware. The pmufw.elf file is located in the ~sdk_v2/FPGA_Demo/export/FPGA_Demo/sw/FPGA_Demo/boot/ directory within the project structure. There is no need to manually add appx.elf and fpga_ta.elf; they will automatically appear in the debug configuration. All selected processors are configured to reset before execution to ensure proper initialization and coordination between components (See figure 4).
 
- This step will upload the partial bitstreams in the memory allocated for the FPGA shell.
+<img src="images/media/image4.png" style="width:6.26772in;height:4.23611in" />
 
-12. In the "Target Setup" tab, fill the "Hardware Platform" and "Bitstream File" with the files provided in  ([Bitstreams/top.xsa](./Bitstreams/top.xsa)) and ([Bitstreams/top.bit](./Bitstreams/top.bit))
-In the "Summary" window, you will see the procedure steps.
+Figure 4
 
-<p align="center">
-    <img src="./figures/step12.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 13: Target Setup - Run Configurations <p align="center">
+2.  Before running in debug mode, the partial bitstream should be uploaded to the system, see Figure 5. Choose appx/psu_cortexa53_0 and then click Edit in the Advanced Options. In the advanced options of the APU application launch, a single partial bitstream is specified to be downloaded to the FPGA before execution. This bitstream corresponds to the "shift left" functionality and is loaded at address 0x20000000. The directory of this partial bitstream ~project_shell_v2\bitstreams\vfpga1_shift_left_partial_icap_bs.bin.
 
-Now connect the USB and JTAG on the ZCU102 board to your machine, as shown below:
+<img src="images/media/image5.png" style="width:6.26772in;height:4.48611in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />
 
-<p align="center">
-    <img src="./figures/board.jpg" width=50% height=50%>
-</p> 
-<p align="center">Figure 14: ZCU102 Connections <p align="center">
+Figure 5
 
-Ensure SW6 is set to JTAG mode (all four switches are on). Then, open a serial terminal, COM7, with a baud rate 115200. 
-Once switched on, run the application in Xilinx Vitis. Once the FPGA is configured, we can see the Menu on the terminal.
-The first two options unlock the virtual FPGAs to be reconfigured. In the figure below, 1 was typed in, and vFPGA_1 was activated.
+3.  In the Target Setup (refer to Figure 6), the bitstream file should be manually selected. Click Browse in Bitstream File and choose the file in ~project_shell_v2\bitstreams\top3.bit.
 
-<p align="center">
-    <img src="./figures/demo1.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 15: Main Menu - FPGA Shell <p align="center">
- 
-Now, we can freely configure vFPGA_1. By typing 3, the shift left accelerator is loaded on vFPGA_1. 
+<img src="images/media/image6.png" style="width:6.26772in;height:4.22222in" alt="图形用户界面, 文本, 应用程序, 电子邮件 AI 生成的内容可能不正确。" />
 
-<p align="center">
-    <img src="./figures/demo2.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 16: Configuring vFPGA_1 - FPGA Shell <p align="center">
+Figure 6
 
-  Typing 6 in the terminal shows that vFPGA_2 cannot be configured before being activated first.
- 
-<p align="center">
-    <img src="./figures/demo3.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 17: Configuring vFPGA_2 - FPGA Shell <p align="center">
+4.  Now check if the necessary directories are sourced in for appx. Click and expand **appx_system -\>** Right click on **appx \[domain_nonsecure_cortexa53_0\] -\>** Click on **C/C++ Build Settings**. As shown in Figure 7, add the correct directories in ARM v8 gcc compiler. Click on Apply and rebuild **appx**.
 
-Activate vFPGA_2 by typing 2 in. 
+<img src="images/media/image7.png" style="width:6.26776in;height:6.24097in" />
 
-<p align="center">
-    <img src="./figures/demo4.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 18: Activating vFPGA_2 - FPGA Shell <p align="center">
+Figure 7
 
- Now, vFPGA_2 can be reconfigured.
+5.  Check if the necessary directories are sourced in for fpga_ta. Click and expand **fpga_ta_system -\>** Right click on **fpga_ta \[domain_secure_cortexar5_0\] -\>** Click on **C/C++ Build Settings**. As shown in Figure 8, add the correct directories in the ARM v5 gcc compiler. Click on Apply and rebuild **fpga_ta**.
 
-<p align="center">
-    <img src="./figures/demo5.png" width=50% height=50%>
-</p> 
-<p align="center">Figure 19: Exiting Demo <p align="center">
+<img src="images/media/image8.png" style="width:6.26806in;height:6.24097in" alt="A screenshot of a computer AI-generated content may be incorrect." />
 
- We can freely lock, activate and switch between the different accelerators on the vFPGAs. 
-Our next step is to implement a second trusted application that will communicate with the trusted application controlling the FPGA services and implement the necessary cryptographic operations to enable partial bitstream decryption and verification.
+Figure 8
+
+6.  Now connect the USB and JTAG on the ZCU102 board to your machine, as shown in Figure 9.
+
+<img src="images/media/image9.png" style="width:3.45625in;height:5.05764in" />
+
+Figure 9
+
+7.  <img src="images/media/image10.jpeg" style="width:2.88403in;height:2.73958in" alt="图片包含 游戏机, 电子, 电路 AI 生成的内容可能不正确。" />Ensure SW6 is set to JTAG mode (all four switches are on) as shown in Figure 10.
+
+Figure 10
+
+8.  For the serial terminal, using **PuTTY (Figure 11)** is suggested, but you can use any other terminal program of your choice.
+
+<img src="images/media/image11.png" style="width:4.28646in;height:3.76215in" alt="图形用户界面 AI 生成的内容可能不正确。" />
+
+Figure 11
+
+9.  Then, open two serial terminals—one for appx and one for fpga_ta, both on the appropriate COM (dependent on the home device ) ports with a baud rate of 115200. If you see more than two COM ports In your Device Manager, it is useful to open a serial terminal for all of them. You can then keep the two that show output.
+
+> **Note:** Ensure that the USB-to-UART driver for the ZCU102 board is installed. You can download it from the following link:
+>
+> Check your Device Manager/Ports(COM & LPT): <https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers>
+
+10. Now we are ready to run and deploy. Make sure the board is turned on and connected. Right click on **appx** **-\> Run as -\> Run Configurations -\>** **Debugger_appx_Default_1** -\> **Run**. You should see a window as shown in Figure 12. Once completed, the output should be visible on the serial terminals.
+
+<img src="images/media/image12.png" style="width:6.26806in;height:2.13611in" alt="A green line on a white background AI-generated content may be incorrect." />  
+Figure 12
+
+## 4. Results
+
+This section presents the expected output on seen via the COM ports.
+
+### 4.1 APPx
+
+The terminal output demonstrates a manual, step-by-step secure partial reconfiguration flow between the Cortex-A53 (APPx) and Cortex-R5 (TA_FPGA) cores on the ZCU102 board. After system boot and FSBL initialization on the RPU, APPx initializes RSA key parameters and manually performs RSA encryption of the AES key. The encrypted AES key is then divided into two chunks due to transfer size limitations and printed for verification.
+
+Next, APPx logs the memory addresses for the requested accelerator’s plain bitstream, encrypted version, and tag. AES-GCM parameters—including keys, IVs, AADs, and expected tags—are manually set and displayed. Each element (key chunks, IV, AAD) is then transferred to TA_FPGA and acknowledged as received.
+
+<img src="images/media/image13.png" style="width:4.66111in;height:3.47639in" />An interrupt confirms successful processing, and the system reports that decryption and authentication were completed successfully.
+
+Figure 13
+
+<img src="images/media/image14.png" style="width:2.39028in;height:5.05903in" />
+
+Figure 14
+
+<img src="images/media/image15.png" style="width:2.93819in;height:5.0625in" alt="文本 AI 生成的内容可能不正确。" />Figure 15
+
+### 4.2 FPGA_TA:
+
+The terminal output from the TA_FPGA (Cortex-R5) side shows the manual, interrupt-driven decryption and partial reconfiguration process that complements the APPx execution. After the FSBL completes and the PL is configured, the TA_FPGA firmware starts and displays a menu for selecting which accelerator to load.
+
+Upon receiving messages from APPx via inter-processor interrupts, TA_FPGA begins receiving and logging AES key chunks, IVs, AADs, and tag data. Each interrupt handler prints out the exact content of the message, providing full visibility into the system's secure handshake process. The AES key is reconstructed from the two chunks sent earlier (split due to transfer size limits), and the decrypted full key is logged in both raw and hexadecimal format.
+
+After successful decryption and validation of the AES-GCM parameters, the encrypted bitstream is authenticated. TA_FPGA confirms the bitstream integrity and starts secure partial reconfiguration of the “Shift Left” accelerator at the specified address. Once the configuration is complete, a confirmation message is sent back to APPx.
+
+<img src="images/media/image16.png" style="width:3.55694in;height:5.90903in" />Overall, the output confirms that TA_FPGA correctly receives all cryptographic parameters, securely decrypts the AES key, authenticates the bitstream, and completes the accelerator reconfiguration—demonstrating the full secure boot and configuration pipeline in a transparent, debug-friendly manner.
+
+Figure 16
+
+<img src="images/media/image17.png" style="width:4.26042in;height:5.90625in" alt="文本 AI 生成的内容可能不正确。" />Figure 17
+
+## **Appendix A**
+
+### A.1 Creating a Project in Vitis
+
+1. Launch Xilinx Vitis and choose a location for your workspace. The version used in the demo is Vitis 2023.1.
+
+<img src="images/media/image18.png" style="width:6.26772in;height:3.52778in" alt="图形用户界面, 文本, 应用程序, Word AI 生成的内容可能不正确。" />Figure 18
+
+2. Choose "Create Application Project" and click Next.
+
+<img src="images/media/image19.png" style="width:6.03178in;height:4.50429in" alt="图形用户界面 AI 生成的内容可能不正确。" />Figure 19
+
+3\. In the tab "Create a new platform from hardware (XSA)", click on Browse .. and choose the file (project_shell_v2/top_wrapper.xsa). This file contains a description of the entire platform, including the hardware design representing the shell. Choose to generate boot components on psu cortexr5_0.<img src="images/media/image20.png" style="width:6.26772in;height:1.56944in" alt="图形用户界面, 文本, 应用程序, 聊天或短信 AI 生成的内容可能不正确。" />
+
+Figure 20
+
+Once loaded, keep the default settings and click Next. In the field "Application project name," provide the application name. Make sure the application is associated with the processor psu_cortexa53_0 and click next.
+
+<img src="images/media/image21.png" style="width:4.40104in;height:3.65535in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />Figure 21
+
+<img src="images/media/image22.png" style="width:6.26772in;height:5.22222in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+
+Figure 22
+
+4\. Keep default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+
+Figure 23
+
+5. In the Explorer tab, you can see the application_name. Expand it and right-click on the src folder. Choose from the menu import resources ... In the field "From directory", provide the path to (sdk_v2\appx\src), the source files will appear in the window, select them, and click finish.
+
+<img src="images/media/image24.png" style="width:6.26806in;height:3.36597in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />
+
+Figure 24
+
+6\. In the Project Explorer, right click on *FPGA_Demo*, choose *New*, then choose *Application Project…,* click *Next*, choose *Select a platform from the repository*, and choose FPGA_Demo.
+
+<img src="images/media/image25.png" style="width:6.26806in;height:5.03056in" />
+
+Figure 25
+
+7\. Choose “psu_cortexr5_0” processor as shown below. If the processor is not listed, check the “show all processors in the hardware specification” option. Use the source files provided in the (sdk_v2\fpga_ta\src) and build the project.<img src="images/media/image26.png" style="width:4.95313in;height:4.92844in" alt="图形用户界面, 文本, 应用程序, 电子邮件 AI 生成的内容可能不正确。" />
+
+Figure 26
+
+8\. Keep the default settings and click next. From "Templates", choose an empty application (c) and click finish.<img src="images/media/image23.png" style="width:6.26772in;height:4.91667in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+
+Figure 27
+
+9\. In the Explorer tab, you can see the application_name. Expand it and right-click on the src folder. Choose from the menu, import resources ... In the field "From directory", provide the path to (sdk_v2\fpga_ta\src), the source files will appear in the window, select them, and click finish.
+
+<img src="images/media/image27.png" style="width:6.26806in;height:4.40972in" />
+
+Figure 28
+
+### A.2 Integrating WolfSSL
+
+To integrate the **wolfSSL v5.7.6** cryptographic library into a standalone Vitis project targeting both the APU (appx) and RPU (fpga_ta) on a Xilinx Zynq UltraScale+ platform, several manual steps must be followed to ensure compatibility with the bare-metal environment. First, download and extract the wolfSSL source archive. Then, import the necessary source files into each application project. For both appx and fpga_ta, navigate in Vitis to the source folder (e.g., appx/src/ or fpga_ta/src/) and import **all files** from the wolfssl/src/ directory and the wolfssl/wolfcrypt/src/ directory. It is important to delete all .S assembly files inside wolfssl/wolfcrypt/src/ after import, as these are not supported by the standalone ARM toolchain and will lead to errors. Additionally, within the wolfssl/wolfcrypt/src/port/ directory, delete everything **except** the xilinx/ folder and nrf51.c.
+
+Next, integrate the custom user configuration header file by defining the preprocessor symbol WOLFSSL_USER_SETTINGS in both application projects. In Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → ARM v8 (for appx) or ARM v7 (for fpga_ta) → Compiler → Symbols**, and add WOLFSSL_USER_SETTINGS to the list. There is **no need to explicitly add user_settings.h to the src/ folder** of the project; it will automatically be picked up from <img src="images/media/image28.png" style="width:6.26806in;height:5.79583in" />the include paths once the wolfSSL source directory is properly added to the project.
+
+Figure 29
+
+<img src="images/media/image29.png" style="width:3.13892in;height:3.84231in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" /><img src="images/media/image30.png" style="width:3.05177in;height:3.84375in" alt="图形用户界面 AI 生成的内容可能不正确。" /> Figure 30
+
+Then, in the Project Explorer, go to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Compiler → Includes**, and add the following two include paths:
+
+- ../wolfssl
+
+- ../wolfssl/IDE/XilinxSDK  
+  <img src="images/media/image31.png" style="width:3.33477in;height:3.82131in" alt="图形用户界面 AI 生成的内容可能不正确。" /><img src="images/media/image32.png" style="width:2.95313in;height:3.8752in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />Figure 31
+
+To avoid linker script errors, such as lscript.ld not found, it is sometimes necessary to explicitly specify the path to the linker script in both application projects. In Vitis, this can be done by navigating to **appx_systems (fpga_ta_system)→ appx (fpga_ta)→** right click **appx (fpga_ta) → C/C++ Build → Settings → Linker → Miscellaneous** and adding the following flag to the “Other flags” field:
+
+-T../src/lscript.ld
+
+If your lscript.ld file is located in a different directory, you should update the path accordingly to reflect its actual location. This step should be applied to both the appx and fpga_ta projects to ensure that the linker can locate and use the correct script during the build process. **However, be careful.** If you are not encountering a missing lscript.ld error, and the script is already being handled correctly by Vitis, manually adding the -T flag can lead to memory region redeclaration issues. This may result in duplicated memory mappings in the final link stage, which can cause runtime hangs or unpredictable behavior. Therefore, only apply this manual step if you are explicitly facing linker script path errors.
+
+<img src="images/media/image33.png" style="width:3.09792in;height:3.73958in" alt="图形用户界面 AI 生成的内容可能不正确。" /><img src="images/media/image34.png" style="width:2.83819in;height:3.73611in" alt="图形用户界面, 文本, 应用程序 AI 生成的内容可能不正确。" />Figure 32
+
+To ensure stable operation of the wolfSSL cryptographic functions in a standalone environment, appropriate stack and heap sizes must be configured for each application. In the appx project, which runs on the Cortex-A53 and handles RSA operations and other computationally intensive tasks, the stack size is set to 0x8000 (32 KB) and the heap size to 0x4000 (16 KB) in the lscript.ld file. This provides sufficient space for cryptographic computations without causing memory overflow.
+
+<img src="images/media/image35.png" style="width:6.26806in;height:3.275in" />
+
+Figure 33
+
+For the fpga_ta project running on the Cortex-R5, larger memory allocations are required due to its execution model and the overhead of secure tasks. Here, the stack size is increased to 0x10000 (64 KB) and the heap size to 0x8000 (32 KB). These settings help prevent stack corruption or heap exhaustion during RSA key handling, buffer-based operations, or modular arithmetic. Both configurations are applied via the Vitis GUI under **Stack and Heap Sizes**, and they should be carefully maintained in line with the expected cryptographic workload of each processing domain.
+
+<img src="images/media/image36.png" style="width:6.26806in;height:3.27778in" alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" />
+
+Figure 34
+
+wolfSSL requires a source of entropy for random number generation, which is unavailable in standalone bare-metal environments. To address this, implement a custom random seed function named my_rng_seed_gen. You should place it in src/wolfcrypt/src/ for both application projects. Create a file named my_rng_seed_gen.c in appx/src/wolfcrypt/src/ and fpga_ta/src/wolfcrypt/src/, and add the following implementation:
+
+<img src="images/media/image37.png" style="width:3.19792in;height:2.47917in" alt="图形用户界面, 文本, 应用程序, 聊天或短信 AI 生成的内容可能不正确。" />Figure 35
+
+\#include \<wolfssl/wolfcrypt/types.h\>
+
+unsigned char my_rng_seed_gen(void) {
+
+static unsigned int seed = 12345;
+
+seed = (seed \* 1103515245 + 12345) & 0xFFFFFFFF; // Simple LCG
+
+return (unsigned char)(seed & 0xFF);
+
+}
+
+This lightweight linear congruential generator (LCG) provides basic entropy suitable for development. Make sure this function name matches the macro defined in your user_settings.h:
+
+\#define CUSTOM_RAND_GENERATE my_rng_seed_gen
+
+<img src="images/media/image38.png" style="width:6.26772in;height:1.125in" alt="文本, 信件 AI 生成的内容可能不正确。" />
+
+Figure 36
+
+You may also encounter build errors due to \<sys/uio.h\> being included by default in wolfssl/ssl.h. To prevent this, open wolfssl/ssl.h and locate the line around 3531 where \#include \<sys/uio.h\> appears. Wrap this line with the following preprocessor condition:
+
+\#if !defined(WOLFSSL_NO_IO)
+
+\#include \<sys/uio.h\>
+
+\#endif
+
+<img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" alt="文本 AI 生成的内容可能不正确。" />
+
+Figure 37
+
+After these adjustments, both appx and fpga_ta will compile and link successfully with wolfSSL, supporting standalone cryptographic operations, most importantly, RSA encryption without relying on an operating system or file system.
+
+⚠️ **Important Warning**
+
+Do not modify the user_settings.h file manually unless you fully understand its configuration and implications. This file has been carefully prepared to match the requirements of a standalone Vitis environment, with all necessary features enabled or disabled to prevent compatibility issues. Making changes to it—such as re-enabling socket or file system features, altering cryptographic flags, or overriding platform-specific options—may lead to build failures, runtime errors, or insecure behavior. Additionally, it is essential to follow **every step in this integration process exactly as described**. Skipping or altering steps (such as incorrectly placing source files, omitting the seed generator, or misconfiguration the linker path) can result in unresolved symbols, linker errors, or improper cryptographic operation. For a stable and secure integration, use the provided user_settings.h as-is and carefully apply each instruction.
 
 ## License
 
