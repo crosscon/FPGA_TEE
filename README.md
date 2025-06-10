@@ -271,7 +271,7 @@ You may also encounter build errors due to \<sys/uio.h\> being included by defau
 \#endif
 
 <img src="images/media/image39.png" style="width:6.26772in;height:3.19444in" />
-Figure 40
+*Figure 40*
 <br><br><br>
 
 
